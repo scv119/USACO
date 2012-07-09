@@ -3,72 +3,62 @@ ID: scv1191
 LANG: JAVA
 TASK: nocows
 */
+
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class nocows {
     static int N;
     static int K;
     final static int mod = 9901;
     static int dp[][];
-
-
-    public static void main (String [] args) throws IOException {
-        // Use BufferedReader rather than RandomAccessFile; it's much faster  /Users/shenchen/Documents/zhihu/USACO/src
-//        BufferedReader f = new BufferedReader(new FileReader("nocows.in"));
-        BufferedReader f = new BufferedReader(new FileReader("/Users/shenchen/Documents/zhihu/USACO/src/test.in"));
-        // input file name goes above
+    public static void main(String args[]) throws IOException{
+        BufferedReader f = new BufferedReader(new FileReader("nocows.in"));
         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("nocows.out")));
-        // Use StringTokenizer vs. readLine/split -- lots faster
+
         StringTokenizer st = new StringTokenizer(f.readLine());
-        // Get line, break into tokens
-        N = Integer.parseInt(st.nextToken());    // first integer
+        N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
         dp = new int[100][200];
-        for(int i = 0 ; i <100; i ++)
-        Arrays.fill(dp[i],-1);
-
-
-
-        out.println(solve(K,N));                           // output result
-        out.close();                                  // close the output file
-        System.exit(0);                               // don't omit this!
+        for(int i = 0 ; i < 100 ; i ++)
+            Arrays.fill(dp[i],-1);
+        out.println(solve(N,K));
+        out.close();
+        System.exit(0);
     }
 
-    static int solve(int k, int n){
-        if(dp[k][n]!= -1)
+
+    static int solve(int n, int k){
+        if(dp[k][n]>=0)
             return dp[k][n];
         int result = 0;
 
-        if(k == 0 ){
-            if(n == 0)
-                result = 1;
-            else
-                result = 0;
-        }
-        else if(k == 1){
+        if(k == 1)
+        {
             if(n == 1)
                 result = 1;
             else
                 result = 0;
         }
-        else{
-            int min = k;
+        else if(k > 1){
+            int min = 2*k-1;
             int max = 199;
-            if(k<10)
-                max = Math.min((1<<k)-1,199);
-            if(n<min || n > max)
-                result = 0;
-            else{
-                for(int l = 0; l < n; l ++){
-                    int r = n - 1 - l;
-                    for(int k1 = 1; k1 <= k - 1; k1 ++){
-
+            if(k < 9){
+                max = Math.min((int)Math.pow(2,k)-1,199);
+            }
+            if(n>= min && n <= max && n%2==1){
+                int value = n -1;
+                for(int x = 1; x <= value; x+=2){
+                    int y = value - x;
+                    if(y%2==0)
+                        continue;
+                    for(int kk = 1; kk < k; kk ++){
                         int mul = 2;
-                        if(k1 == k-1)
+                        if(kk == k-1)
                             mul = 1;
-                        result += solve(k-1,l)*solve(k1,r)*mul;
-                        result%=mod;
+                        result = result + solve(x,kk)*solve(y,k-1)*mul;
+                        result = result%mod;
                     }
                 }
             }
@@ -76,5 +66,4 @@ public class nocows {
         dp[k][n] = result;
         return result;
     }
-
 }
