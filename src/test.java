@@ -9,6 +9,7 @@ import java.util.*;
 public class test {
     public static void main(String args[]) throws IOException{
         BufferedReader f = new BufferedReader(new FileReader("test.in"));
+//        BufferedReader f = new BufferedReader(new FileReader("/Users/shenchen/Documents/zhihu/USACO/src/test.in"));
         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("test.out")));
 
         StringTokenizer st = new StringTokenizer(f.readLine());
