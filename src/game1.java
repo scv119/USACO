@@ -36,10 +36,38 @@ public class game1 {
                 st = new StringTokenizer(f.readLine());
             arr[i] = Integer.parseInt(st.nextToken());
         }
-        solve();
-        out.println(p1+" "+p2);
+//        solve();
+        build();
+        out.println(dp[0][count-1][0][0]+" "+dp[0][count-1][0][1]);
         out.close();
         System.exit(0);
+    }
+
+    static void build(){
+        int tmpstart[] = new int[2];
+        int tmpend[]   = new int[2];
+        for(int len = 1; len <= count; len ++)
+            for(int start = 0 ; (start + len - 1) < count; start++) {
+                int end = start + len - 1;
+                for(int player = 0; player < 2 ; player ++){
+                    if(len == 1){
+                        dp[start][end][player][player] = arr[start];
+                        dp[start][end][player][player^1] = 0;
+                    }
+                    else{
+
+                        tmpstart[player] = dp[start+1][end][player^1][player] + arr[start];
+                        tmpstart[player^1] = dp[start+1][end][player^1][player^1];
+
+                        tmpend  [player] = dp[start][end-1][player^1][player] + arr[end];
+                        tmpend  [player^1] = dp[start][end-1][player^1][player^1];
+
+                        dp[start][end][player][player] = Math.max(tmpstart[player], tmpend[player]);
+                        dp[start][end][player][player^1] = Math.min(tmpstart[player^1], tmpend[player^1]);
+                    }
+                }
+            }
+
     }
 
     static void solve(){
