@@ -114,8 +114,6 @@ public class fence8 {
                 boards[i] += rails[railNo];
 
             }
-
-
         return ret;
     }
 
